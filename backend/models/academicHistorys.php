@@ -53,18 +53,15 @@ function getAcademicHistoryById($conn, $id) {
     return $stmt->get_result();
 }
 
-function createAcademicHistory($conn, $student_name, $subject_name, $approved) {
+function createAcademicHistory($conn, $student_id, $subject_id, $approved) {
     
-    $student_id = getStudentIdByName($conn, $student_name);
-    $subject_id = getSubjectIdByName($conn, $subject_name);
-
     if (!$student_id || !$subject_id) {
         return false;
     }
 
     // Insertar la historia académica
     $stmt = $conn->prepare("INSERT INTO academic_history (student_id, subject_id, approved) VALUES (?, ?, ?)");
-    $stmt->bind_param("iis", $student_id, $subject_id, $approved);
+    $stmt->bind_param("iii", $student_id, $subject_id, $approved);
 
     if ($stmt->execute()) {
         echo json_encode(["message" => "Información agregada correctamente"]);
@@ -76,16 +73,14 @@ function createAcademicHistory($conn, $student_name, $subject_name, $approved) {
     }
 }
 
-function updateAcademicHistory($conn, $id, $student_name, $subject_name, $approved) {
-    $student_id = getStudentIdByName($conn, $student_name);
-    $subject_id = getSubjectIdByName($conn, $subject_name);
-
+function updateAcademicHistory($conn, $id, $student_id, $subject_id, $approved) {
+    
     if (!$student_id || !$subject_id) {
         return false;
     }
 
     $stmt = $conn->prepare("UPDATE academic_history SET student_id = ?, subject_id = ?, approved = ? WHERE id = ?");
-    $stmt->bind_param("iisi", $student_id, $subject_id, $approved, $id);
+    $stmt->bind_param("iiii", $student_id, $subject_id, $approved, $id);
 
     if ($stmt->execute()) {
         echo json_encode(["message" => "Actualización exitosa"]);

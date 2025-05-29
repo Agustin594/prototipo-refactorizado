@@ -48,22 +48,23 @@ CREATE TABLE IF NOT EXISTS academic_history (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
     subject_id INT NOT NULL,
-    approved VARCHAR(2) NOT NULL,
+    approved BOOLEAN DEFAULT FALSE,
+    UNIQUE (student_id,subject_id)
     FOREIGN KEY(student_id) references students(id) ON DELETE CASCADE,
     FOREIGN KEY(subject_id) references subjects(id) ON DELETE CASCADE
 ) ENGINE=INNODB;
 
 -- Insertar algunos datos de prueba
 INSERT INTO academic_history (student_id, subject_id, approved) VALUES
-(1, 1, 'SI'),
-(1, 2, 'SI'),
-(1, 3, 'SI'),
-(2, 1, 'SI'),
-(2, 2, 'NO'),
-(2, 3, 'NO'),
-(3, 1, 'NO'),
-(3, 2, 'NO'),
-(3, 3, 'NO'),
+(1, 1, 1),
+(1, 2, 1),
+(1, 3, 1),
+(2, 1, 1),
+(2, 2, 0),
+(2, 3, 0),
+(3, 1, 0),
+(3, 2, 0),
+(3, 3, 0),
 
 
 

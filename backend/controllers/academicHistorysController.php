@@ -17,34 +17,30 @@ function handleGet($conn) {
 
 function handlePost($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
-    if (!isset($input['student_name']) || !isset($input['subject_name']) || !isset($input['approved'])) {
+    if (!isset($input['student_id']) || !isset($input['subject_id']) || !isset($input['approved'])) {
         http_response_code(400);
         echo json_encode(["error" => "Faltan parámetros"]);
         return;
     }
 
-    $student_name = $input['student_name'];
-    $subject_name = $input['subject_name'];
-    $approved = $input['approved'];
-
-    createAcademicHistory($conn, $student_name, $subject_name, $approved);
+    createAcademicHistory($conn, $input['student_id'], $input['subject_id'], $input['approved']);
 }
 
 function handlePut($conn) {
     $input = json_decode(file_get_contents("php://input"), true);
     
-    if (!isset($input['id']) || !isset($input['student_name']) || !isset($input['subject_name']) || !isset($input['approved'])) {
+    if (!isset($input['id']) || !isset($input['student_id']) || !isset($input['subject_id']) || !isset($input['approved'])) {
         http_response_code(400);
         echo json_encode(["error" => "Faltan parámetros"]);
         return;
     }
 
     $id = $input['id'];
-    $student_name = $input['student_name'];
-    $subject_name = $input['subject_name'];
+    $student_id = $input['student_id'];
+    $subject_id = $input['subject_id'];
     $approved = $input['approved'];
 
-    updateAcademicHistory($conn, $id, $student_name, $subject_name, $approved);
+    updateAcademicHistory($conn, $id, $student_id, $subject_id, $approved);
 }
 
 function handleDelete($conn) {

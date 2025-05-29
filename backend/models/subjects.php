@@ -12,17 +12,17 @@ function getSubjectById($conn, $id) {
     return $stmt->get_result();
 }
 
-function createSubject($conn, $subject_name, $teacher) {
-    $sql = "INSERT INTO subjects (subject_name, teacher) VALUES (?, ?)";
+function createSubject($conn, $subject_name) {
+    $sql = "INSERT INTO subjects (subject_name) VALUES (?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ss", $subject_name, $teacher);
+    $stmt->bind_param("s", $subject_name);
     return $stmt->execute();
 }
 
-function updateSubject($conn, $id, $subject_name, $teacher) {
-    $sql = "UPDATE subjects SET subject_name = ?, teacher = ? WHERE id = ?";
+function updateSubject($conn, $id, $subject_name) {
+    $sql = "UPDATE subjects SET subject_name = ? WHERE id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssi", $subject_name, $teacher, $id);
+    $stmt->bind_param("si", $subject_name, $id);
     return $stmt->execute();
 }
 
