@@ -19,6 +19,11 @@ function setupSubjectFormHandler()
             name: document.getElementById('name').value.trim()
         };
 
+        if(!subject.name){
+            alert("Inserte una materia.");
+            return;
+        }
+
         try 
         {
             if (subject.id) 
@@ -37,7 +42,7 @@ function setupSubjectFormHandler()
         }
         catch (err)
         {
-            console.error(err.message);
+            alert("La materia ya está guardada.");
         }
   });
 }
@@ -61,7 +66,25 @@ async function loadSubjects()
     catch (err)
     {
         console.error('Error cargando materias:', err.message);
+        errormessage();
     }
+}
+
+function errormessage(){
+    const tbody = document.getElementById('subjectTableBody');
+    tbody.replaceChildren();
+
+    const tr = document.createElement('tr');
+
+    tr.appendChild(createErrorCell());
+
+    tbody.appendChild(tr);
+}
+
+function createErrorCell(){
+    const td = document.createElement('td');
+    td.textContent = "Error cargando materias.";
+    return td;
 }
 
 function renderSubjectTable(subjects)
@@ -122,5 +145,6 @@ async function confirmDeleteSubject(id)
     catch (err)
     {
         console.error('Error al borrar materia:', err.message);
+        alert("No se pudo borrar la materia.");
     }
 }

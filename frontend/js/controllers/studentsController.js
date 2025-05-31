@@ -14,6 +14,21 @@ function setupFormHandler()
     {
         e.preventDefault();
         const student = getFormData();
+
+        if (!student.firstName || !student.lastName || !student.email || !student.age) {
+            alert("Todos los campos son obligatorios.");
+            return;
+        }
+
+        if (!validateEmail(student.email)) {
+            alert("El email no es válido.");
+            return;
+        }
+
+        if (student.age < 16 || student.age > 100) {
+            alert("La edad debe ser un número válido.");
+            return;
+        }
     
         try 
         {
@@ -30,9 +45,14 @@ function setupFormHandler()
         }
         catch (err)
         {
-            console.error(err.message);
+            alert("El email ya está asignado a un estudiante.");
         }
     });
+}
+
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
 }
 
 function setupCancelHandler()
@@ -71,7 +91,25 @@ async function loadStudents()
     catch (err) 
     {
         console.error('Error cargando estudiantes:', err.message);
+        errormessage();
     }
+}
+
+function errormessage(){
+    const tbody = document.getElementById('studentTableBody');
+    tbody.replaceChildren();
+
+    const tr = document.createElement('tr');
+
+    tr.appendChild(createErrorCell());
+
+    tbody.appendChild(tr);
+}
+
+function createErrorCell(){
+    const td = document.createElement('td');
+    td.textContent = "Error cargando estudiantes.";
+    return td;
 }
   
 function renderStudentTable(students)
@@ -139,5 +177,6 @@ async function confirmDelete(id)
     catch (err) 
     {
         console.error('Error al borrar:', err.message);
+        alert("No se pudo borrar el estudiante.");
     }
 }

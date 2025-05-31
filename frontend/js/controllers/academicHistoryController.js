@@ -52,6 +52,11 @@ function setupFormHandler()
 
         const relation = getFormData();
 
+        if(!relation.student_id || !relation.subject_id){
+            alert("Todos los campos son obligatorios.");
+            return;
+        }
+
         try 
         {
             if (relation.id) 
@@ -68,6 +73,7 @@ function setupFormHandler()
         catch (err) 
         {
             console.error('Error guardando relación:', err.message);
+            alert("El estudiante y la materia ya están asignados.")
         }
     });
 }
@@ -126,7 +132,25 @@ async function loadRelations()
     catch (err) 
     {
         console.error('Error cargando inscripciones:', err.message);
+        errormessage();
     }
+}
+
+function errormessage(){
+    const tbody = document.getElementById('relationTableBody');
+    tbody.replaceChildren();
+
+    const tr = document.createElement('tr');
+
+    tr.appendChild(createErrorCell());
+
+    tbody.appendChild(tr);
+}
+
+function createErrorCell(){
+    const td = document.createElement('td');
+    td.textContent = "Error cargando datos.";
+    return td;
 }
 
 function renderRelationsTable(relations) 
@@ -195,5 +219,6 @@ async function confirmDelete(id)
     catch (err) 
     {
         console.error('Error al borrar inscripción:', err.message);
+        alert("No se pudo borrar la información.");
     }
 }
