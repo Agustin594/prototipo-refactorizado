@@ -27,27 +27,20 @@ function updateStudent($conn, $id, $first_name, $last_name, $email, $age) {
 }
 
 function deleteStudent($conn, $id) {
-
-    //Chequea que el id no este en academic_history en student_id
-    $sql = "SELECT COUNT(*) as total FROM academic_history WHERE student_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result()->fetch_assoc();
-
-    if ($result['total'] > 0) {
-        echo json_encode([
-            "success" => false,
-            "message" => "No se puede eliminar el estudiante porque tiene materias asociadas."
-        ]);
-        exit();
-    }
-
-    //Si total es igual a 0 elimina.
-
     $sql = "DELETE FROM students WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
-    return $stmt->execute();
+    try{
+        if ($stmt->execute())
+            return true;
+        else
+            throw new Exception("Error al eliminar al estudiante" . $stmt->error, $stmt->errno);
+    }catch (Exception $e) {
+        if ($e->getCode() == 1451) { //Codigo de eliminar llave foranea
+            throw new Exception ("No se puede eliminar al estudiante porque tiene cursos asociados",409);
+        }else{
+            throw $e;
+        }
+    }
 }
 ?>

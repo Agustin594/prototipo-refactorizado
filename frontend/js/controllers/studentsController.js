@@ -171,12 +171,17 @@ async function confirmDelete(id)
   
     try 
     {
-        await studentsAPI.remove(id);
-        loadStudents();
+        try{
+            await studentsAPI.remove(id);
+            loadStudents();
+        }
+        catch (err){
+            alert(`No se puede eliminar al estudiante porque tiene cursos asociados`);
+        }
     } 
     catch (err) 
     {
         console.error('Error al borrar:', err.message);
-        alert("No se pudo borrar el estudiante.");
+        alert("Error al borrar.");
     }
 }
