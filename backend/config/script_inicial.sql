@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS academic_history (
     subject_id INT NOT NULL,
     approved BOOLEAN DEFAULT FALSE,
     UNIQUE (student_id,subject_id)
-    FOREIGN KEY(student_id) references students(id) ON DELETE CASCADE,
-    FOREIGN KEY(subject_id) references subjects(id) ON DELETE CASCADE
+    FOREIGN KEY(student_id) references students(id),
+    FOREIGN KEY(subject_id) references subjects(id)
 ) ENGINE=INNODB;
 
 -- Insertar algunos datos de prueba
