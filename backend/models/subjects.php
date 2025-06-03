@@ -27,27 +27,20 @@ function updateSubject($conn, $id, $subject_name) {
 }
 
 function deleteSubject($conn, $id) {
-
-    //Chequea que el id no este en academic_history en student_id
-    $sql = "SELECT COUNT(*) as total FROM academic_history WHERE subject_id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $result = $stmt->get_result()->fetch_assoc();
-
-    if ($result['total'] > 0) {
-        echo json_encode([
-            "success" => false,
-            "message" => "No se puede eliminar la materia porque tiene materias asociadas."
-        ]);
-        exit();
-    }
-
-    //si es 0 borra.
-
     $sql = "DELETE FROM subjects WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $id);
-    return $stmt->execute();
+    try{
+        if($stmt->execute())
+            return true;
+        else
+            throw new Exception("Error al eliminar la materia: " . $stmt->error, $stmt->errno);
+    }catch (Exception $e) {
+        if ($e->getCode() == 1451) { // Error de clave foránea
+            throw new Exception ("No se puede eliminar la materia porque tiene estudiantes asignados",409);
+        }else{
+            throw $e;
+        }
+    }
 }
 ?>

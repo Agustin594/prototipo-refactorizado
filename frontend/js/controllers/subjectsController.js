@@ -139,12 +139,15 @@ async function confirmDeleteSubject(id)
 
     try
     {
-        await subjectsAPI.remove(id);
-        loadSubjects();
+        try{
+            await subjectsAPI.remove(id);
+            loadSubjects();
+        }catch (err) {
+            alert(`No es posible borrar la materia yNo se puede eliminar la materia porque tiene cursos asociados`);
+        }
     }
     catch (err)
     {
         console.error('Error al borrar materia:', err.message);
-        alert("No se pudo borrar la materia.");
     }
 }
